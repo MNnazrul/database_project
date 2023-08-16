@@ -90,6 +90,13 @@ const insert_into_users = (body, callBack) => {
     );
 };
 
+const product_info = (callBack) => {
+    pool.query(`select * from products`, [], (error, results, fields) => {
+        if (error) return callBack(error);
+        return callBack(null, results);
+    });
+};
+
 // full_name: 'john doe',
 //   user_name: 'john.doe',
 //   email: 'admin@gmail.com',
@@ -121,6 +128,7 @@ const all = {
     insert_into_users,
     requested_users,
     delete_from_registration,
+    product_info,
 };
 
 module.exports = all;

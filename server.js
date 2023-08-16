@@ -20,11 +20,41 @@ app.set("views", path.join(__dirname, "views"));
 app.post("/by", (req, res) => {});
 
 app.get("/", (req, res) => {
-    res.render("login.ejs");
+    // res.render("login.ejs");
+    // res.sendFile(__dirname + "/index.html");
+    let data;
+    all.product_info((err, results) => {
+        if (err) res.json({ err });
+        else if (results) res.render("cart.ejs", { data: results });
+    });
+});
+
+app.get("/search", (request, response) => {
+    let query = request.query.q;
+
+    let sql = "";
+    if (query != "")
+        sql = `SELECT * FROM customers WHERE customer_first_name LIKE '%${query}%' OR customer_last_name LIKE '%${query}%' OR customer_email LIKE '%${query}%'`;
+    else sql = `SELECT * FROM customers ORDER BY customer_id`;
+
+    pool.query(sql, (error, results) => {
+        if (error) windows.allert("don't use any special character");
+        // console.log(results);
+        response.send(results);
+    });
 });
 
 app.get("/signup", (req, res) => {
     res.render("signup.ejs");
+});
+
+app.get("/sendInnerHtml", (req, res) => {
+    const receivedSerializedData = req.query.data;
+    const body = JSON.parse(receivedSerializedData);
+    console.log(body);
+    res.json({
+        body,
+    });
 });
 
 app.post("/registration", async (req, res) => {
@@ -51,16 +81,6 @@ app.post("/registration", async (req, res) => {
         );
     }
 });
-
-// full_name: 'john doe',
-//   user_name: 'john.doe',
-//   email: 'admin@gmail.com',
-//   phone: '01738430336',
-//   address: 'Sylhet',
-//   category: 'admin',
-//   shop_category: 'Super Shop',
-//   password: '1111',
-//   confirm_password: '1111'
 
 app.get("/users", (req, res) => {
     let rows;

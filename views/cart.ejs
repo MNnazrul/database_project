@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ajax Live Data Search in Node.js with MySql</title>
+    <link href="https://getbootstrap.com/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-5 mb-5">
+        <h1 class="text-primary text-center"><b>Ajax Live Data Search in Node.js with MySql</b></h1>
+        <div class="mt-3 mb-3">
+            <div class="card">
+                <div class="card-header">Customer Data</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <input type="text" id="search" placeholder="Search..." class="form-control" autocomplete="off">
+                        <table class="table table-bordered mt-3">
+                            <thead>
+                                <tr >
+                                    <td>Product Name</td>
+                                    <td>Product Code</td>
+                                    <td>Available Product</td>
+                                    <td> Per Unit Price </td>
+                                    <td>Quantity</td>
+                                    <td>SubTotal</td>
+                                </tr>
+                                <% data.forEach(row => { %>
+                                    <tr >
+                                        <td><%= row.product_name %></td>
+                                        <td><%= row.product_code %></td>
+                                        <td><%= row.available_quantity %></td>
+                                        <td id="iprice<%= row.product_code %>"><%= row.per_unit_price %></td>
+                                        <td>
+                                            <input type="number" id="iquan<%= row.product_code %>" onchange="sub_func('<%= row.product_code %>')" value=<%= row.quantity %>>
+                                        </td>
+                                        <td id="itotal<%= row.product_code %>"><%=row.per_unit_price%></td>
+                                    </tr>
+                                <% }); %>
+                                <a href="/sendInnerHtml?data=<%= encodeURIComponent(JSON.stringify(data)) %>" ><span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 
+                                    rounded-full dark:bg-green-900 dark:text-green-300">send data</span></a>
+                            </tbody>
+                            <div>
+                                <label>Total : </label>
+
+                            </div>
+                            <div>
+                                <!-- <button id="sendButton" onclick="postData()">Send updates</button> -->
+                            </div>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+
+
+    function sub_func(productCode) {
+        let iprice = (document.getElementById('iprice' + productCode).innerText);
+        let iquan = (document.getElementById('iquan' + productCode).value);
+        let itotal = iprice * iquan;
+        document.getElementById('itotal' + productCode).innerText = itotal;
+        // for (let i = 0; i < data.lenght; i++) {
+        //     if(data[i].product_code == productCode) {
+        //         data[i].quantity = iquan;
+        //         break;
+        //     }
+        // }
+    }
+
+        // document.getElementById('sendButton').addEventListener('click', function() {
+        //     // var elements = ['element1', 'element2'];
+        //     // var innerHTMLData = {};
+
+        //     // elements.forEach(function(elementId) {
+        //     //     var element = document.getElementById(elementId);
+        //     //     innerHTMLData[elementId] = element.innerHTML;
+        //     // });
+
+        //     // Send the inner HTML data to the server using AJAX
+        //     var xhr = new XMLHttpRequest();
+        //     let r1;
+        //     xhr.open("POST", "/sendInnerHtml", true);
+        //     xhr.setRequestHeader('Content-Type', 'application/json');
+        //     xhr.send(JSON.stringify({ r1:"rows" }));
+        // });
+
+// function sub_func() {
+//     let iprice = document.getElementById('iprice');
+//     let iquan = document.getElementById('iquan');
+//     let itotal = document.getElementById('itotal');
+//     console.log("working");
+//     for (let i = 0; i < iprice.length; i++) {
+//         itotal[i].innerHTML = (iprice[i].value * iquan[i].value);
+//     }
+// }
+// subfunc();
+
+</script>
